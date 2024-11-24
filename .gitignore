@@ -1,0 +1,16 @@
+.env
+node_modules/
+vendor/
+
+# exclude everything
+uploads/*
+
+# exception to the rule
+!uploads/.save 
+
+!uploads/reports
+!uploads/reports/.save 
+!uploads/carteo
+
+
+
