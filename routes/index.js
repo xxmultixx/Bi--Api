@@ -514,7 +514,9 @@ router.post('/desactivaSeguimiento',
     // Busqueda manual
     router.get('/busqueda-manual', busquedaManualController.busquedaManualIn);
     router.get('/busqueda-movil', clientesController.busquedaClientes);
-    router.get('/busqueda-clientes-bitacora', auth, busquedaManualController.obtenerClientesBitacora);
+    router.get('/busqueda-clientes-bitacora', auth, busquedaManualController.obtieneClientes);
+    //router.get('/busqueda-clientes-bitacora', auth, busquedaManualController.obtenerClientesBitacora);
+
     // router.get('/busqueda-clientes-bitacora-test', auth, busquedaManualController.obtenerClientesBitacoraTest);
 
  //valida Telefono

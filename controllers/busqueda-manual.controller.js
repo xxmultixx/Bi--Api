@@ -1,9 +1,12 @@
 const { Op } = require("sequelize");
+const Sequelize = require('sequelize');
+const db = require('../models');
 const buscarClienteIn = require("../helpers/buscarClienteIn");
 const { searchClientesByKeyOrDnis } = require("../helpers/search-clientes");
 const ClientesBancoAzteca = require("../models/clientes-banco-azteca.model");
 require('dotenv').config();
 process.env.TZ = 'America/Monterrey';
+const { QueryTypes } = require('sequelize');
 
 module.exports.busquedaManualIn = async (req, res) => {
 
@@ -72,6 +75,36 @@ exports.obtenerClientesBitacora = async (req, res) => {
     }
 }
 
+module.exports.obtieneClientes = async (req, res) => {
+
+    const { valor_busqueda }  = req.query;
+    try {
+         
+        const sql = `EXEC [GET_BUSQUEDACLIENTE] 
+            @VALOR = ?`; 
+    
+            const  responses = await db.query(sql, {
+                replacements: [valor_busqueda],
+                type: QueryTypes.RAW
+            });
+
+        const data = [{
+            firma: 'Banco_Azteca',
+            total_registros: responses[0].length,
+            clientes: responses[0]
+        }]
+
+
+       return res.json({ status: true, info: { msg: 'Clientes Encontrados'}, data: data })
+             
+
+    } catch (error) {
+
+        console.error(error);
+        return res.json({ status: false, info: { msg:  error }, data: [] })
+    }
+
+}
 
 
 // exports.obtenerClientesBitacora = async (req, res) => {
