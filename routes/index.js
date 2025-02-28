@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { check } = require('express-validator');
 
+
 const usuarioController = require('../controllers/usuarios.controller');
 const interacionesController = require('../controllers/interaciones.controller');
 const botoneraController = require('../controllers/botonera.controller');
@@ -46,15 +47,23 @@ const blasterMasivoController =  require('../controllers/reportes/envios-masivos
 const smsMasivoController =  require('../controllers/reportes/envios-masivos-sms/envios-masivos-sms.controller');
 const emailMasivoController =  require('../controllers/email/email.controller');
 
+const testDiegoController =  require('../controllers/testDiego/testDiego.controller');
+
 /*** MIDDLEWARES ***/
 const auth = require('../middleware/auth');
 const authGerente = require('../middleware/credencialesGenrente');
 const { validarCampos } = require('../middleware/validar-campos');
 const uploadCSVFile = require('../middleware/uploadCSVFile');
 const uploadImageFile = require ('../middleware/uploadImageFile');
-
+const upload = require('../middleware/uploadCSVFile');
 
 module.exports = function () {
+
+//testDiego
+
+    router.post('/testDiego', 
+        testDiegoController.ArchivoExtraer);
+
 
     //Usuarios
     router.get('/usuarios',

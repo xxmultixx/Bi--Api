@@ -493,7 +493,6 @@ return res.json({
 
 
 
-
 module.exports.obtenerAcciones = async ( req , res ) => {
 
     
