@@ -55,14 +55,22 @@ const authGerente = require('../middleware/credencialesGenrente');
 const { validarCampos } = require('../middleware/validar-campos');
 const uploadCSVFile = require('../middleware/uploadCSVFile');
 const uploadImageFile = require ('../middleware/uploadImageFile');
-const upload = require('../middleware/uploadCSVFile');
+
 
 module.exports = function () {
 
 //testDiego
+    router.get('/Insertarlista', 
+    testDiegoController.InsertarLista);
 
-    router.post('/testDiego', 
-        testDiegoController.ArchivoExtraer);
+    router.get('/Mostrarlista', 
+    testDiegoController.muestraLista);
+
+    router.post('/Insertalistasms', 
+    testDiegoController.InsertaraListaSMS);
+
+    router.get('/Eliminar', 
+    testDiegoController.Eliminar);
 
 
     //Usuarios

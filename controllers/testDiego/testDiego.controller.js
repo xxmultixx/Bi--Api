@@ -185,4 +185,155 @@ mensaje: "Este es un mensaje de prueba"
 
 
 }
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
+//apartir de aqui es lo que vas a necesitar para el front
+//Parte aldo
 
+// Insertar lista
+
+exports.InsertarLista = async (req, res) => {
+    const { creador, nombrelista} = req.body;  
+	
+
+    const sql = 'EXEC DIEGO_INSERTALISTA @CREADOR = ? , @NOMBRELISTA = ?';  
+
+    try {
+		const respuesta = await db.query(sql, {
+			replacements: [creador, nombrelista],
+			type: QueryTypes.RAW
+
+		});
+        
+        res.json({
+            isSuccess: true,
+            data: respuesta  [0]
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Error credenciales invalidas", error: error.message });
+    }
+};
+
+//muestra listas
+
+exports.muestraLista = async (req, res) => {
+    try {
+        const sql = 'EXEC SP_OBTIENELISTAS';  
+        const respuesta = await db.query(sql, {
+            type: QueryTypes.RAW 
+        });
+        
+        res.json({
+            isSuccess: true,
+            data: respuesta
+        });
+    } catch (error) {
+        res.status(500).json({
+            isSuccess: false,
+            error: error.message
+        });
+    }
+};
+
+//sp que inserta a ListaSMS
+
+exports.InsertaraListaSMS = async (req, res) => {
+    const { id, usuario } = req.body;  
+
+    if (!req.files || !req.files.file) {
+        return res.json({
+            status: false,
+            info: {
+                msg: "No se envió archivo"
+            },
+            data: []
+        });
+    }
+
+    
+    const uploadFile = req.files.file;  
+
+    if (uploadFile.mimetype !== 'text/csv' && uploadFile.mimetype !== 'application/vnd.ms-excel') {
+        return res.json({
+            status: false,
+            info: {
+                msg: 'La extensión del archivo no es válida. Se requiere un archivo CSV.'
+            },
+            data: []
+        });
+    }
+
+    if (((uploadFile.size / 1024) / 1024) > 75) {
+        return res.json({
+            status: false,
+            info: {
+                msg: 'El peso del archivo supera los 75 MB'
+            },
+            data: []
+        });
+    }
+
+    
+    const nuevo_nombre = uuidv4() + '.csv';
+    const uploadPath = path.join('C:\\SQLUploads', nuevo_nombre);
+
+    try {
+        await uploadFile.mv(uploadPath);
+
+        const sql = 'EXEC sp_insertaListaSMS @idlista = ? , @usuario = ?, @urlArchivo = ?';  
+        
+        const respuesta = await db.query(sql, {
+            replacements: [id, usuario, uploadPath],
+            type: QueryTypes.RAW
+        });
+        
+        
+        if (respuesta[0][0]?.error_carga == '1') {
+            return res.json({
+                status: false,
+                info: {
+                    msg: respuesta[0][0].mensaje
+                },
+                data: []
+            });
+        }
+     
+        
+        return res.json({
+            status: true,
+            info: {
+                msg: "La carga se subió de manera exitosa!!!!",
+            },
+            data: respuesta[0][0]
+        });
+    } catch (error) {
+        
+        res.status(500).json({ 
+            message: "Algo ha salido mal", 
+            error: error.message 
+        });
+    }
+};
+
+//eliminar registros
+
+exports.Eliminar = async (req, res) => {
+    const { id} = req.body;  
+	
+
+    const sql = 'EXEC SP_eliminaRegistrosListasSMS @idCarga = ?';  
+
+    try {
+		const respuesta = await db.query(sql, {
+			replacements: [id],
+			type: QueryTypes.RAW
+
+		});
+        
+        res.json({
+            isSuccess: true,
+            data: respuesta  [0]
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Error credenciales invalidas", error: error.message });
+    }
+};
