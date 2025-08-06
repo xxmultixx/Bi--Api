@@ -60,6 +60,30 @@ const uploadImageFile = require ('../middleware/uploadImageFile');
 module.exports = function () {
 
 //testDiego
+   
+    router.get('/pruebaaldo',
+    testDiegoController.Apiprueba);
+    router.get('/resumen',
+    testDiegoController.Resumenmostrar);
+    //ruta para mostrar sms enviados
+    router.get('/smsmos',
+    testDiegoController.MostrarSMS);
+
+    router.post('/Dividir',
+    testDiegoController.Dividirporarchivos);
+    //Descargar Archivo xd
+    router.get('/Descargar',
+    testDiegoController.Descargararchivo);
+    //----
+    router.get('/Mostrarcargas',  ///aldo aqui esta para eliminar las cargas
+    testDiegoController.Cargas);
+
+    router.get('/Eliminarcargas',  ///aldo aqui esta para mostrar las cargas
+    testDiegoController.EliminarCargas);
+
+    router.post('/testediego', 
+    testDiegoController.ArchivoExtraer);
+
     router.get('/Insertarlista', 
     testDiegoController.InsertarLista);
 
